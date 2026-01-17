@@ -9,67 +9,57 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get("session_token")?.value;
   const { pathname } = request.nextUrl;
 
-  // Public routes yang bisa diakses tanpa login
   const publicRoutes = [
-    "/login", 
-    "/register", 
-    "/api/auth/login", 
+    "/login",
+    "/register",
+    "/401",
+    "/403",
+    "/api/auth/login",
     "/api/auth/register",
     "/uploads",
-    "/api/user/products", // User bisa lihat produk tanpa login
-    "/api/user/cart/count", // Untuk cart badge polling
+    "/api/user/products",
+    "/api/user/cart/count",
   ];
-  
-  // Allow public routes
-  if (publicRoutes.includes(pathname) || pathname.startsWith("/_next") || pathname.startsWith("/public")) {
+
+  if (
+    publicRoutes.includes(pathname) ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/public")
+  ) {
     return NextResponse.next();
   }
 
-  // Cek token untuk protected routes
+  const isAdminPage = pathname.startsWith("/admin");
+  const isUserPage = pathname.startsWith("/user");
+
+  // ❌ belum login tapi maksa dashboard
+  if ((isAdminPage || isUserPage) && !token) {
+    return NextResponse.redirect(new URL("/401", request.url));
+  }
+
   if (!token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   try {
-    // Verify token
     const { payload } = await jwtVerify(token, secretKey);
-    
-    // Role-based access control
-    if (pathname.startsWith("/admin")) {
-      if (payload.role !== "ADMIN") {
-        return NextResponse.redirect(new URL("/user", request.url));
-      }
+
+    // ❌ ADMIN maksa ke /user
+    if (isUserPage && payload.role === "ADMIN") {
+      return NextResponse.redirect(
+        new URL("/403?role=user", request.url)
+      );
     }
 
-    if (pathname.startsWith("/user")) {
-      if (payload.role !== "USER") {
-        return NextResponse.redirect(new URL("/admin", request.url));
-      }
-    }
-
-    // Allow API routes based on role
-    if (pathname.startsWith("/api/admin")) {
-      if (payload.role !== "ADMIN") {
-        return NextResponse.json(
-          { error: "Unauthorized" },
-          { status: 403 }
-        );
-      }
-    }
-
-    if (pathname.startsWith("/api/user")) {
-      if (payload.role !== "USER") {
-        return NextResponse.json(
-          { error: "Unauthorized" },
-          { status: 403 }
-        );
-      }
+    // ❌ USER maksa ke /admin
+    if (isAdminPage && payload.role === "USER") {
+      return NextResponse.redirect(
+        new URL("/403?role=admin", request.url)
+      );
     }
 
     return NextResponse.next();
   } catch (error) {
-    // Token invalid, redirect ke login
-    console.error("Middleware auth error:", error);
     const response = NextResponse.redirect(new URL("/login", request.url));
     response.cookies.delete("session_token");
     return response;
@@ -77,13 +67,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
