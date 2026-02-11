@@ -53,6 +53,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // ⬇️ HAPUS RELASI TERLEBIH DAHULU ⬇️
+    // Hapus semua CartItem yang terkait dengan produk ini
+    await prisma.cartItem.deleteMany({
+      where: { productId: id }
+    });
+
+    // Hapus semua OrderItem yang terkait dengan produk ini
+    await prisma.orderItem.deleteMany({
+      where: { productId: id }
+    });
+
     // Delete image file jika bukan placeholder
     if (existingProduct.image && !existingProduct.image.includes("placeholder")) {
       const filename = existingProduct.image.split("/").pop();

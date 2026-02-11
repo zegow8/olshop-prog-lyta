@@ -6,7 +6,8 @@ import {
   Package, 
   Users, 
   ShoppingCart, 
-  DollarSign 
+  DollarSign,
+  Instagram
 } from "lucide-react";
 
 const prisma = new PrismaClient();
@@ -162,6 +163,31 @@ export default async function AdminDashboard() {
           </tbody>
         </table>
       </div>
+
+      {/* Footer Admin */}
+      <footer style={styles.footer}>
+        <div style={styles.footerContent}>
+          <div style={styles.footerLeft}>
+            <h3 style={styles.footerTitle}>Admin Panel E - Commerce Lyta</h3>
+            <p style={styles.footerCopyright}>@2026 Earlyta Dwi A (11) XI-PPLG</p>
+          </div>
+          
+          <div style={styles.footerRight}>
+            <div style={styles.developerContact}>
+              <span style={styles.contactLabel}>System Issue? </span>
+              <a 
+                href="https://instagram.com/eddlyaa__" 
+                target="_blank"
+                rel="noopener noreferrer"
+                style={styles.contactLink}
+              >
+                <Instagram size={16} style={{ marginRight: '8px' }} />
+                Contact Developer
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
@@ -206,42 +232,6 @@ const styles = {
     overflow: 'hidden',
     transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
   },
-  statIconContainerBlue: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '56px',
-    height: '56px',
-    borderRadius: '14px',
-    marginBottom: '20px',
-    background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-    color: 'white',
-    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)'
-  },
-  statIconContainerGreen: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '56px',
-    height: '56px',
-    borderRadius: '14px',
-    marginBottom: '20px',
-    background: 'linear-gradient(135deg, #10b981, #059669)',
-    color: 'white',
-    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)'
-  },
-  statIconContainerYellow: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '56px',
-    height: '56px',
-    borderRadius: '14px',
-    marginBottom: '20px',
-    background: 'linear-gradient(135deg, #f59e0b, #d97706)',
-    color: 'white',
-    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)'
-  },
   statIconContainerMaroon: {
     display: 'inline-flex',
     alignItems: 'center',
@@ -278,7 +268,8 @@ const styles = {
     borderRadius: '16px',
     boxShadow: '11px 10px 22px -5px rgba(0,0,0,0.83)',
     border: '1px solid #e5e7eb',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    marginBottom: '40px'
   },
   tableHeader: {
     padding: '28px',
@@ -358,5 +349,91 @@ const styles = {
     fontSize: '13px',
     color: '#4b5563',
     fontWeight: '500'
+  },
+  
+  // Footer Admin Styles
+  footer: {
+    background: 'white',
+    borderRadius: '16px',
+    padding: '30px',
+    boxShadow: '11px 10px 22px -5px rgba(0,0,0,0.83)',
+    border: '1px solid #e5e7eb',
+    marginTop: '40px'
+  },
+  footerContent: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap' as const,
+    gap: '20px'
+  },
+  footerLeft: {
+    
+  },
+  footerTitle: {
+    fontSize: '18px',
+    fontWeight: '900',
+    color: '#111827',
+    margin: '0 0 8px 0'
+  },
+  footerCopyright: {
+    fontSize: '14px',
+    color: '#6b7280',
+    fontWeight: '500'
+  },
+  footerRight: {
+    
+  },
+  developerContact: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  },
+  contactLabel: {
+    fontSize: '14px',
+    color: '#4b5563',
+    fontWeight: '500'
+  },
+  contactLink: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '10px 20px',
+    background: 'linear-gradient(135deg, #800000, #a62626)',
+    color: 'white',
+    textDecoration: 'none',
+    borderRadius: '10px',
+    fontSize: '14px',
+    fontWeight: '700',
+    transition: 'all 0.3s ease',
+    boxShadow: '0 4px 12px rgba(128, 0, 0, 0.2)'
   }
 };
+
+// Tambahkan style untuk hover effect
+if (typeof window !== 'undefined') {
+  const style = document.createElement('style');
+  style.innerHTML = `
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.95);
+    }
+    
+    .contact-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(128, 0, 0, 0.4);
+    }
+    
+    @media (max-width: 768px) {
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+      }
+      
+      .contact-link {
+        justify-content: center;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}

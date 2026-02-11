@@ -8,7 +8,10 @@ import {
   Plus, 
   Minus, 
   ArrowRight,
-  Package
+  Package,
+  Mail,
+  Phone,
+  Instagram
 } from "lucide-react";
 
 interface CartItem {
@@ -133,176 +136,257 @@ export default function CartPage() {
   }
 
   return (
-    <div style={styles.container}>
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-        .cart-item:hover {
-          border-color: #800000;
-          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.95);
-        }
-        .checkout-btn:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 15px 30px rgba(128, 0, 0, 0.4);
-        }
-      `}</style>
+    <>
+      <div style={styles.container}>
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+          .cart-item:hover {
+            border-color: #800000;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.95);
+          }
+          .checkout-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(128, 0, 0, 0.4);
+          }
+        `}</style>
 
-      {/* Header */}
-      <div style={styles.header}>
-        <h1 style={styles.title}>Keranjang Belanja</h1>
-        <p style={styles.subtitle}>
-          {totalItems} item di keranjang
-        </p>
-      </div>
+        {/* Header */}
+        <div style={styles.header}>
+          <h1 style={styles.title}>Keranjang Belanja</h1>
+          <p style={styles.subtitle}>
+            {totalItems} item di keranjang
+          </p>
+        </div>
 
-      {cartItems.length > 0 ? (
-        <div style={styles.contentGrid}>
-          {/* Cart Items */}
-          <div style={styles.itemsColumn}>
-            <div style={styles.cartList}>
-              {cartItems.map((item) => (
-                <div key={item.id} style={styles.cartItem} className="cart-item">
-                  {/* Product Image */}
-                  <div style={styles.productImageContainer}>
-                    <img
-                      src={item.product.image}
-                      alt={item.product.name}
-                      style={styles.productImage}
-                    />
-                  </div>
-
-                  {/* Product Info */}
-                  <div style={styles.productInfo}>
-                    <div style={styles.productHeader}>
-                      <div>
-                        <h3 style={styles.productName}>
-                          {item.product.name}
-                        </h3>
-                        <p style={styles.unitPrice}>
-                          Rp {item.product.price.toLocaleString()}
-                        </p>
-                        <p style={styles.stockInfo}>
-                          Stok: {item.product.stock}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        disabled={removing === item.id}
-                        style={styles.removeButton}
-                      >
-                        {removing === item.id ? (
-                          <div style={styles.removingSpinner}></div>
-                        ) : (
-                          <Trash2 size={20} />
-                        )}
-                      </button>
+        {cartItems.length > 0 ? (
+          <div style={styles.contentGrid}>
+            {/* Cart Items */}
+            <div style={styles.itemsColumn}>
+              <div style={styles.cartList}>
+                {cartItems.map((item) => (
+                  <div key={item.id} style={styles.cartItem} className="cart-item">
+                    {/* Product Image */}
+                    <div style={styles.productImageContainer}>
+                      <img
+                        src={item.product.image}
+                        alt={item.product.name}
+                        style={styles.productImage}
+                      />
                     </div>
 
-                    {/* Quantity Controls */}
-                    <div style={styles.controlsRow}>
-                      <div style={styles.quantityControls}>
+                    {/* Product Info */}
+                    <div style={styles.productInfo}>
+                      <div style={styles.productHeader}>
+                        <div>
+                          <h3 style={styles.productName}>
+                            {item.product.name}
+                          </h3>
+                          <p style={styles.unitPrice}>
+                            Rp {item.product.price.toLocaleString()}
+                          </p>
+                          <p style={styles.stockInfo}>
+                            Stok: {item.product.stock}
+                          </p>
+                        </div>
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          disabled={item.quantity <= 1 || updating === item.id}
-                          style={styles.quantityButton}
+                          onClick={() => removeItem(item.id)}
+                          disabled={removing === item.id}
+                          style={styles.removeButton}
                         >
-                          <Minus size={16} />
-                        </button>
-                        <div style={styles.quantityDisplay}>
-                          {updating === item.id ? (
-                            <div style={styles.updatingSpinner}></div>
+                          {removing === item.id ? (
+                            <div style={styles.removingSpinner}></div>
                           ) : (
-                            <span style={styles.quantityText}>{item.quantity}</span>
+                            <Trash2 size={20} />
                           )}
-                        </div>
-                        <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          disabled={item.quantity >= item.product.stock || updating === item.id}
-                          style={styles.quantityButton}
-                        >
-                          <Plus size={16} />
                         </button>
                       </div>
-                      <div style={styles.itemTotal}>
-                        <div style={styles.totalPrice}>
-                          Rp {(item.product.price * item.quantity).toLocaleString()}
+
+                      {/* Quantity Controls */}
+                      <div style={styles.controlsRow}>
+                        <div style={styles.quantityControls}>
+                          <button
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            disabled={item.quantity <= 1 || updating === item.id}
+                            style={styles.quantityButton}
+                          >
+                            <Minus size={16} />
+                          </button>
+                          <div style={styles.quantityDisplay}>
+                            {updating === item.id ? (
+                              <div style={styles.updatingSpinner}></div>
+                            ) : (
+                              <span style={styles.quantityText}>{item.quantity}</span>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            disabled={item.quantity >= item.product.stock || updating === item.id}
+                            style={styles.quantityButton}
+                          >
+                            <Plus size={16} />
+                          </button>
+                        </div>
+                        <div style={styles.itemTotal}>
+                          <div style={styles.totalPrice}>
+                            Rp {(item.product.price * item.quantity).toLocaleString()}
+                          </div>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Order Summary */}
+            <div style={styles.summaryColumn}>
+              <div style={styles.summaryCard}>
+                <h2 style={styles.summaryTitle}>Ringkasan Belanja</h2>
+
+                <div style={styles.summaryItems}>
+                  <div style={styles.summaryRow}>
+                    <span style={styles.summaryLabel}>Total ({totalItems} item)</span>
+                    <span style={styles.summaryValue}>Rp {subtotal.toLocaleString()}</span>
+                  </div>
+                  <div style={styles.summaryRow}>
+                    <span style={styles.summaryLabel}>Biaya Pengiriman</span>
+                    <span style={styles.freeShipping}>Gratis</span>
+                  </div>
+                </div>
+
+                <div style={styles.totalSection}>
+                  <div style={styles.totalRow}>
+                    <span style={styles.totalLabel}>Total Bayar</span>
+                    <div style={styles.totalAmount}>
+                      <span style={styles.totalNumber}>Rp {subtotal.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
-              ))}
+
+                <button
+                  onClick={handleCheckout}
+                  disabled={cartItems.length === 0}
+                  style={cartItems.length === 0 ? styles.checkoutButtonDisabled : styles.checkoutButton}
+                  className="checkout-btn"
+                >
+                  Lanjut ke Checkout
+                  <ArrowRight size={20} style={{ marginLeft: '8px' }} />
+                </button>
+
+                <p style={styles.noteText}>
+                  *Harga sudah termasuk PPN
+                </p>
+              </div>
+
+              {/* Continue Shopping */}
+              <button
+                onClick={() => router.push("/user")}
+                style={styles.continueButton}
+              >
+                Lanjutkan Belanja
+              </button>
             </div>
           </div>
-
-          {/* Order Summary */}
-          <div style={styles.summaryColumn}>
-            <div style={styles.summaryCard}>
-              <h2 style={styles.summaryTitle}>Ringkasan Belanja</h2>
-
-              <div style={styles.summaryItems}>
-                <div style={styles.summaryRow}>
-                  <span style={styles.summaryLabel}>Total ({totalItems} item)</span>
-                  <span style={styles.summaryValue}>Rp {subtotal.toLocaleString()}</span>
-                </div>
-                <div style={styles.summaryRow}>
-                  <span style={styles.summaryLabel}>Biaya Pengiriman</span>
-                  <span style={styles.freeShipping}>Gratis</span>
-                </div>
-              </div>
-
-              <div style={styles.totalSection}>
-                <div style={styles.totalRow}>
-                  <span style={styles.totalLabel}>Total Bayar</span>
-                  <div style={styles.totalAmount}>
-                    <span style={styles.totalNumber}>Rp {subtotal.toLocaleString()}</span>
-                  </div>
-                </div>
-              </div>
-
-              <button
-                onClick={handleCheckout}
-                disabled={cartItems.length === 0}
-                style={cartItems.length === 0 ? styles.checkoutButtonDisabled : styles.checkoutButton}
-                className="checkout-btn"
-              >
-                Lanjut ke Checkout
-                <ArrowRight size={20} style={{ marginLeft: '8px' }} />
-              </button>
-
-              <p style={styles.noteText}>
-                *Harga sudah termasuk PPN
-              </p>
-            </div>
-
-            {/* Continue Shopping */}
+        ) : (
+          <div style={styles.emptyState}>
+            <Package size={64} style={styles.emptyIcon} />
+            <h3 style={styles.emptyTitle}>
+              Keranjang Belanja Kosong
+            </h3>
+            <p style={styles.emptyText}>
+              Yuk tambahkan produk favoritmu ke keranjang!
+            </p>
             <button
               onClick={() => router.push("/user")}
-              style={styles.continueButton}
+              style={styles.shopButton}
             >
-              Lanjutkan Belanja
+              Mulai Belanja
             </button>
           </div>
-        </div>
-      ) : (
-        <div style={styles.emptyState}>
-          <Package size={64} style={styles.emptyIcon} />
-          <h3 style={styles.emptyTitle}>
-            Keranjang Belanja Kosong
-          </h3>
-          <p style={styles.emptyText}>
-            Yuk tambahkan produk favoritmu ke keranjang!
-          </p>
-          <button
-            onClick={() => router.push("/user")}
-            style={styles.shopButton}
+        )}
+      </div>
+
+      {/* Footer Minimal */}
+      <footer style={{
+        background: '#f8f9fa',
+        padding: '40px 20px 20px',
+        textAlign: 'center',
+        borderTop: '1px solid #e5e7eb'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '30px',
+          marginBottom: '30px'
+        }}>
+          <a 
+            href="mailto:earlytadwi7@gmail.com"
+            style={{
+              color: '#4b5563',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textDecoration: 'none',
+              transition: 'color 0.2s'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#800000'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#4b5563'}
           >
-            Mulai Belanja
-          </button>
+            <Mail size={20} />
+            <span style={{ fontSize: '12px', marginTop: '5px' }}>Email</span>
+          </a>
+          
+          <a 
+            href="https://wa.me/6281547184307" 
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: '#4b5563',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textDecoration: 'none',
+              transition: 'color 0.2s'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#800000'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#4b5563'}
+          >
+            <Phone size={20} />
+            <span style={{ fontSize: '12px', marginTop: '5px' }}>WhatsApp</span>
+          </a>
+          
+          <a 
+            href="https://instagram.com/eddlyaa__" 
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: '#4b5563',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textDecoration: 'none',
+              transition: 'color 0.2s'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#800000'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#4b5563'}
+          >
+            <Instagram size={20} />
+            <span style={{ fontSize: '12px', marginTop: '5px' }}>Instagram</span>
+          </a>
         </div>
-      )}
-    </div>
+        
+        <div style={{
+          color: '#6b7280',
+          fontSize: '14px',
+          borderTop: '1px solid #e5e7eb',
+          paddingTop: '20px'
+        }}>
+          © 2026 E-commerce Lyta
+        </div>
+      </footer>
+    </>
   );
 }
 

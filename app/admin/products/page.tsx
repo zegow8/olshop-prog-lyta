@@ -7,7 +7,8 @@ import {
   Edit, 
   Trash2, 
   Search,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Instagram
 } from "lucide-react";
 
 interface Product {
@@ -209,260 +210,287 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <div style={styles.container}>
-      <style jsx>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
+    <>
+      <div style={styles.container}>
+        <style jsx>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
           }
-        }
-      `}</style>
+          @keyframes slideUp {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `}</style>
 
-      <div style={styles.header}>
-        <div>
-          <h1 style={styles.title}>Kelola Produk</h1>
-          <p style={styles.subtitle}>Total {filteredProducts.length} produk ditemukan</p>
+        <div style={styles.header}>
+          <div>
+            <h1 style={styles.title}>Kelola Produk</h1>
+            <p style={styles.subtitle}>Total {filteredProducts.length} produk ditemukan</p>
+          </div>
+          <button
+            onClick={() => openModal()}
+            style={styles.addButton}
+          >
+            <Plus size={20} style={{ marginRight: '8px' }} />
+            Tambah Produk
+          </button>
         </div>
-        <button
-          onClick={() => openModal()}
-          style={styles.addButton}
-        >
-          <Plus size={20} style={{ marginRight: '8px' }} />
-          Tambah Produk
-        </button>
-      </div>
 
-      {/* Search Bar */}
-      <div style={styles.searchContainer}>
-        <div style={styles.searchWrapper}>
-          <Search style={styles.searchIcon} size={20} />
-          <input
-            type="text"
-            placeholder="Cari produk..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={styles.searchInput}
-          />
+        {/* Search Bar */}
+        <div style={styles.searchContainer}>
+          <div style={styles.searchWrapper}>
+            <Search style={styles.searchIcon} size={20} />
+            <input
+              type="text"
+              placeholder="Cari produk..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={styles.searchInput}
+            />
+          </div>
         </div>
-      </div>
 
-      {/* Products Table */}
-      <div style={styles.tableContainer}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={styles.table}>
-            <thead>
-              <tr style={styles.tableHeader}>
-                <th style={styles.tableHeaderCell}>Gambar</th>
-                <th style={styles.tableHeaderCell}>Nama Produk</th>
-                <th style={styles.tableHeaderCell}>Harga</th>
-                <th style={styles.tableHeaderCell}>Stok</th>
-                <th style={styles.tableHeaderCell}>Deskripsi</th>
-                <th style={styles.tableHeaderCell}>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredProducts.map((product) => (
-                <tr key={product.id} style={styles.tableRow}>
-                  <td style={styles.tableCell}>
-                    <div style={styles.imageContainer}>
-                      {product.image ? (
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          style={styles.productImage}
-                        />
-                      ) : (
-                        <ImageIcon size={24} style={styles.imagePlaceholder} />
-                      )}
-                    </div>
-                  </td>
-                  <td style={styles.tableCell}>
-                    <div style={styles.productName}>{product.name}</div>
-                  </td>
-                  <td style={styles.tableCell}>
-                    <div style={styles.productPrice}>Rp {product.price.toLocaleString()}</div>
-                  </td>
-                  <td style={styles.tableCell}>
-                    <span style={getStockStyle(product.stock)}>
-                      {product.stock} pcs
-                    </span>
-                  </td>
-                  <td style={styles.tableCell}>
-                    <div style={styles.productDescription}>
-                      {product.description || "-"}
-                    </div>
-                  </td>
-                  <td style={styles.tableCell}>
-                    <button
-                      onClick={() => openModal(product)}
-                      style={styles.editButton}
-                    >
-                      <Edit size={18} />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(product.id)}
-                      style={styles.deleteButton}
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </td>
+        {/* Products Table */}
+        <div style={styles.tableContainer}>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={styles.table}>
+              <thead>
+                <tr style={styles.tableHeader}>
+                  <th style={styles.tableHeaderCell}>Gambar</th>
+                  <th style={styles.tableHeaderCell}>Nama Produk</th>
+                  <th style={styles.tableHeaderCell}>Harga</th>
+                  <th style={styles.tableHeaderCell}>Stok</th>
+                  <th style={styles.tableHeaderCell}>Deskripsi</th>
+                  <th style={styles.tableHeaderCell}>Aksi</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredProducts.map((product) => (
+                  <tr key={product.id} style={styles.tableRow}>
+                    <td style={styles.tableCell}>
+                      <div style={styles.imageContainer}>
+                        {product.image ? (
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            style={styles.productImage}
+                          />
+                        ) : (
+                          <ImageIcon size={24} style={styles.imagePlaceholder} />
+                        )}
+                      </div>
+                    </td>
+                    <td style={styles.tableCell}>
+                      <div style={styles.productName}>{product.name}</div>
+                    </td>
+                    <td style={styles.tableCell}>
+                      <div style={styles.productPrice}>Rp {product.price.toLocaleString()}</div>
+                    </td>
+                    <td style={styles.tableCell}>
+                      <span style={getStockStyle(product.stock)}>
+                        {product.stock} pcs
+                      </span>
+                    </td>
+                    <td style={styles.tableCell}>
+                      <div style={styles.productDescription}>
+                        {product.description || "-"}
+                      </div>
+                    </td>
+                    <td style={styles.tableCell}>
+                      <button
+                        onClick={() => openModal(product)}
+                        style={styles.editButton}
+                      >
+                        <Edit size={18} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(product.id)}
+                        style={styles.deleteButton}
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {filteredProducts.length === 0 && (
+            <div style={styles.emptyState}>
+              <p style={styles.emptyText}>Tidak ada produk ditemukan</p>
+            </div>
+          )}
         </div>
 
-        {filteredProducts.length === 0 && (
-          <div style={styles.emptyState}>
-            <p style={styles.emptyText}>Tidak ada produk ditemukan</p>
+        {/* Create/Edit Modal */}
+        {showModal && (
+          <div style={styles.modalOverlay} onClick={() => {
+            setShowModal(false);
+            resetForm();
+          }}>
+            <div style={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
+              <div style={styles.modalContent}>
+                <h2 style={styles.modalTitle}>
+                  {editMode ? "Edit Produk" : "Tambah Produk Baru"}
+                </h2>
+
+                {errorMessage && (
+                  <div style={styles.errorAlert}>
+                    {errorMessage}
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit}>
+                  {/* Image Upload */}
+                  <div style={styles.formGroup}>
+                    <label style={styles.formLabel}>
+                      Gambar Produk {!editMode && <span style={styles.required}>*</span>}
+                    </label>
+                    {!editMode && !imagePreview && (
+                      <p style={styles.requiredText}>Gambar wajib diupload</p>
+                    )}
+                    <div style={styles.uploadContainer}>
+                      <label style={imagePreview ? styles.uploadLabelWithImage : styles.uploadLabel}>
+                        {imagePreview ? (
+                          <img
+                            src={imagePreview}
+                            alt="Preview"
+                            style={styles.uploadPreview}
+                          />
+                        ) : (
+                          <div style={styles.uploadPlaceholder}>
+                            <ImageIcon style={styles.uploadIcon} />
+                            <p style={styles.uploadText}>
+                              <span style={{ fontWeight: '600' }}>Klik untuk upload</span> atau drag & drop
+                            </p>
+                            <p style={styles.uploadSubtext}>
+                              PNG, JPG, GIF (MAX. 5MB)
+                            </p>
+                          </div>
+                        )}
+                        <input
+                          type="file"
+                          style={{ display: 'none' }}
+                          accept="image/*"
+                          onChange={handleImageChange}
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Name */}
+                  <div style={styles.formGroup}>
+                    <label style={styles.formLabel}>Nama Produk</label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      style={styles.formInput}
+                      required
+                    />
+                  </div>
+
+                  {/* Price */}
+                  <div style={styles.formGroup}>
+                    <label style={styles.formLabel}>Harga (Rp)</label>
+                    <input
+                      type="number"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      style={styles.formInput}
+                      required
+                      min="0"
+                    />
+                  </div>
+
+                  {/* Stock */}
+                  <div style={styles.formGroup}>
+                    <label style={styles.formLabel}>Stok</label>
+                    <input
+                      type="number"
+                      value={stock}
+                      onChange={(e) => setStock(e.target.value)}
+                      style={styles.formInput}
+                      required
+                      min="0"
+                    />
+                  </div>
+
+                  {/* Description */}
+                  <div style={styles.formGroup}>
+                    <label style={styles.formLabel}>Deskripsi</label>
+                    <textarea
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      style={{ ...styles.formInput, ...styles.textarea }}
+                      rows={3}
+                    />
+                  </div>
+
+                  {/* Buttons */}
+                  <div style={styles.modalActions}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowModal(false);
+                        resetForm();
+                      }}
+                      style={styles.cancelButton}
+                      disabled={uploading}
+                    >
+                      Batal
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={uploading}
+                      style={uploading ? styles.submitButtonDisabled : styles.submitButton}
+                    >
+                      {uploading ? "Menyimpan..." : editMode ? "Update Produk" : "Simpan Produk"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         )}
       </div>
 
-      {/* Create/Edit Modal */}
-      {showModal && (
-        <div style={styles.modalOverlay} onClick={() => {
-          setShowModal(false);
-          resetForm();
-        }}>
-          <div style={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
-            <div style={styles.modalContent}>
-              <h2 style={styles.modalTitle}>
-                {editMode ? "Edit Produk" : "Tambah Produk Baru"}
-              </h2>
-
-              {errorMessage && (
-                <div style={styles.errorAlert}>
-                  {errorMessage}
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit}>
-                {/* Image Upload */}
-                <div style={styles.formGroup}>
-                  <label style={styles.formLabel}>
-                    Gambar Produk {!editMode && <span style={styles.required}>*</span>}
-                  </label>
-                  {!editMode && !imagePreview && (
-                    <p style={styles.requiredText}>Gambar wajib diupload</p>
-                  )}
-                  <div style={styles.uploadContainer}>
-                    <label style={imagePreview ? styles.uploadLabelWithImage : styles.uploadLabel}>
-                      {imagePreview ? (
-                        <img
-                          src={imagePreview}
-                          alt="Preview"
-                          style={styles.uploadPreview}
-                        />
-                      ) : (
-                        <div style={styles.uploadPlaceholder}>
-                          <ImageIcon style={styles.uploadIcon} />
-                          <p style={styles.uploadText}>
-                            <span style={{ fontWeight: '600' }}>Klik untuk upload</span> atau drag & drop
-                          </p>
-                          <p style={styles.uploadSubtext}>
-                            PNG, JPG, GIF (MAX. 5MB)
-                          </p>
-                        </div>
-                      )}
-                      <input
-                        type="file"
-                        style={{ display: 'none' }}
-                        accept="image/*"
-                        onChange={handleImageChange}
-                      />
-                    </label>
-                  </div>
-                </div>
-
-                {/* Name */}
-                <div style={styles.formGroup}>
-                  <label style={styles.formLabel}>Nama Produk</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    style={styles.formInput}
-                    required
-                  />
-                </div>
-
-                {/* Price */}
-                <div style={styles.formGroup}>
-                  <label style={styles.formLabel}>Harga (Rp)</label>
-                  <input
-                    type="number"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    style={styles.formInput}
-                    required
-                    min="0"
-                  />
-                </div>
-
-                {/* Stock */}
-                <div style={styles.formGroup}>
-                  <label style={styles.formLabel}>Stok</label>
-                  <input
-                    type="number"
-                    value={stock}
-                    onChange={(e) => setStock(e.target.value)}
-                    style={styles.formInput}
-                    required
-                    min="0"
-                  />
-                </div>
-
-                {/* Description */}
-                <div style={styles.formGroup}>
-                  <label style={styles.formLabel}>Deskripsi</label>
-                  <textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    style={{ ...styles.formInput, ...styles.textarea }}
-                    rows={3}
-                  />
-                </div>
-
-                {/* Buttons */}
-                <div style={styles.modalActions}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowModal(false);
-                      resetForm();
-                    }}
-                    style={styles.cancelButton}
-                    disabled={uploading}
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={uploading}
-                    style={uploading ? styles.submitButtonDisabled : styles.submitButton}
-                  >
-                    {uploading ? "Menyimpan..." : editMode ? "Update Produk" : "Simpan Produk"}
-                  </button>
-                </div>
-              </form>
+      {/* Footer Admin */}
+      <footer style={styles.footer}>
+        <div style={styles.footerContent}>
+          <div style={styles.footerLeft}>
+            <h3 style={styles.footerTitle}>Admin Panel E - Commerce Lyta</h3>
+            <p style={styles.footerCopyright}>@2026 Earlyta Dwi A (11) XI-PPLG</p>
+          </div>
+          
+          <div style={styles.footerRight}>
+            <div style={styles.developerContact}>
+              <span style={styles.contactLabel}>System Issue? </span>
+              <a 
+                href="https://instagram.com/eddlyaa__" 
+                target="_blank"
+                rel="noopener noreferrer"
+                style={styles.contactLink}
+              >
+                <Instagram size={16} style={{ marginRight: '8px' }} />
+                Contact Developer
+              </a>
             </div>
           </div>
         </div>
-      )}
-    </div>
+      </footer>
+    </>
   );
 }
 
@@ -803,6 +831,63 @@ const styles = {
     borderTop: '3px solid #800000',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite'
+  },
+
+  // Footer Admin Styles
+  footer: {
+    background: 'white',
+    borderRadius: '16px',
+    padding: '30px',
+    boxShadow: '11px 10px 22px -5px rgba(0,0,0,0.83)',
+    border: '1px solid #e5e7eb',
+    margin: '30px'
+  },
+  footerContent: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap' as const,
+    gap: '20px'
+  },
+  footerLeft: {
+    
+  },
+  footerTitle: {
+    fontSize: '18px',
+    fontWeight: '900',
+    color: '#111827',
+    margin: '0 0 8px 0'
+  },
+  footerCopyright: {
+    fontSize: '14px',
+    color: '#6b7280',
+    fontWeight: '500'
+  },
+  footerRight: {
+    
+  },
+  developerContact: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  },
+  contactLabel: {
+    fontSize: '14px',
+    color: '#4b5563',
+    fontWeight: '500'
+  },
+  contactLink: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '10px 20px',
+    background: 'linear-gradient(135deg, #800000, #a62626)',
+    color: 'white',
+    textDecoration: 'none',
+    borderRadius: '10px',
+    fontSize: '14px',
+    fontWeight: '700',
+    transition: 'all 0.3s ease',
+    boxShadow: '0 4px 12px rgba(128, 0, 0, 0.2)'
   }
 };
 
@@ -849,3 +934,60 @@ const getStockStyle = (stock: number) => {
     };
   }
 };
+
+// Tambahkan style untuk hover effect
+if (typeof window !== 'undefined') {
+  const style = document.createElement('style');
+  style.innerHTML = `
+    .add-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(128, 0, 0, 0.4);
+    }
+    
+    .table-row:hover {
+      background: #fdf2f2;
+    }
+    
+    .edit-button:hover {
+      color: #1d4ed8;
+    }
+    
+    .delete-button:hover {
+      color: #dc2626;
+    }
+    
+    .submit-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(128, 0, 0, 0.4);
+    }
+    
+    .cancel-button:hover:not(:disabled) {
+      background: #f9fafb;
+      border-color: #800000;
+      color: #800000;
+    }
+    
+    .upload-label:hover {
+      border-color: #800000;
+      background: #fdf2f2;
+    }
+    
+    .contact-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(128, 0, 0, 0.4);
+    }
+    
+    @media (max-width: 768px) {
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+      }
+      
+      .contact-link {
+        justify-content: center;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}

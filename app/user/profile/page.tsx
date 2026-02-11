@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { User, Mail, Calendar, Save, Key, Shield, Edit, X, Check, Lock } from "lucide-react";
+import { User, Mail, Calendar, Save, Key, Shield, Edit, X, Check, Lock, Phone, Instagram } from "lucide-react";
 
 interface UserProfile {
   id: string;
@@ -166,325 +166,406 @@ export default function ProfilePage() {
   }
 
   return (
-    <div style={styles.container}>
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideIn {
-          from { opacity: 0; transform: translateX(-10px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        .profile-card:hover {
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-        .input-field:focus {
-          border-color: #800000;
-          background: white;
-          box-shadow: 0 0 0 4px rgba(128, 0, 0, 0.1);
-        }
-        .action-btn:hover {
-          transform: translateY(-2px);
-        }
-        .toggle-btn:hover {
-          color: #800000;
-        }
-      `}</style>
+    <>
+      <div style={styles.container}>
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+          }
+          .profile-card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+          }
+          .input-field:focus {
+            border-color: #800000;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(128, 0, 0, 0.1);
+          }
+          .action-btn:hover {
+            transform: translateY(-2px);
+          }
+          .toggle-btn:hover {
+            color: #800000;
+          }
+        `}</style>
 
-      {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.titleSection}>
-          <h1 style={styles.title}>Profil Akun</h1>
-          <p style={styles.subtitle}>Kelola informasi dan keamanan akun Anda</p>
+        {/* Header */}
+        <div style={styles.header}>
+          <div style={styles.titleSection}>
+            <h1 style={styles.title}>Profil Akun</h1>
+            <p style={styles.subtitle}>Kelola informasi dan keamanan akun Anda</p>
+          </div>
         </div>
-      </div>
 
-      {/* Success Message */}
-      {successMessage && (
-        <div style={styles.successAlert} className="slide-in">
-          <Check size={20} style={{ marginRight: '12px' }} />
-          {successMessage}
-        </div>
-      )}
+        {/* Success Message */}
+        {successMessage && (
+          <div style={styles.successAlert} className="slide-in">
+            <Check size={20} style={{ marginRight: '12px' }} />
+            {successMessage}
+          </div>
+        )}
 
-      {/* Error Message */}
-      {errors.submit && (
-        <div style={styles.errorAlert}>
-          <X size={20} style={{ marginRight: '12px' }} />
-          {errors.submit}
-        </div>
-      )}
+        {/* Error Message */}
+        {errors.submit && (
+          <div style={styles.errorAlert}>
+            <X size={20} style={{ marginRight: '12px' }} />
+            {errors.submit}
+          </div>
+        )}
 
-      <div style={styles.contentGrid}>
-        {/* Left Column - Profile Card */}
-        <div style={styles.mainColumn}>
-          <div style={styles.profileCard} className="profile-card">
-            {/* Profile Header */}
-            <div style={styles.profileHeader}>
-              <div style={styles.avatarContainer}>
-                <div style={styles.avatar}>
-                  <User size={48} />
-                </div>
-                {profile.role && (
-                  <div style={styles.roleBadge}>
-                    {profile.role}
+        <div style={styles.contentGrid}>
+          {/* Left Column - Profile Card */}
+          <div style={styles.mainColumn}>
+            <div style={styles.profileCard} className="profile-card">
+              {/* Profile Header */}
+              <div style={styles.profileHeader}>
+                <div style={styles.avatarContainer}>
+                  <div style={styles.avatar}>
+                    <User size={48} />
                   </div>
-                )}
+                  {profile.role && (
+                    <div style={styles.roleBadge}>
+                      {profile.role}
+                    </div>
+                  )}
+                </div>
+                <div style={styles.profileInfo}>
+                  <h2 style={styles.profileName}>
+                    {profile.name || "Pengguna"}
+                  </h2>
+                  <p style={styles.profileEmail}>{profile.email}</p>
+                  <div style={styles.memberSince}>
+                    <Calendar size={16} style={{ marginRight: '8px' }} />
+                    <span>Bergabung {formatDate(profile.createdAt)}</span>
+                  </div>
+                </div>
               </div>
-              <div style={styles.profileInfo}>
-                <h2 style={styles.profileName}>
-                  {profile.name || "Pengguna"}
-                </h2>
-                <p style={styles.profileEmail}>{profile.email}</p>
-                <div style={styles.memberSince}>
-                  <Calendar size={16} style={{ marginRight: '8px' }} />
-                  <span>Bergabung {formatDate(profile.createdAt)}</span>
+
+              {/* Profile Form */}
+              <div style={styles.formSection}>
+                {/* Name Field */}
+                <div style={styles.formGroup}>
+                  <div style={styles.formLabelRow}>
+                    <label style={styles.formLabel}>
+                      <User size={18} style={{ marginRight: '10px' }} />
+                      Nama Lengkap
+                    </label>
+                    <button
+                      onClick={() => setEditing(!editing)}
+                      style={styles.editToggle}
+                      className="toggle-btn"
+                    >
+                      {editing ? (
+                        <>
+                          <X size={16} style={{ marginRight: '6px' }} />
+                          Batal
+                        </>
+                      ) : (
+                        <>
+                          <Edit size={16} style={{ marginRight: '6px' }} />
+                          Edit
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  
+                  {editing ? (
+                    <div>
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        style={{
+                          ...styles.inputField,
+                          borderColor: errors.name ? '#ef4444' : '#e5e7eb'
+                        }}
+                        className="input-field"
+                        placeholder="Masukkan nama lengkap"
+                      />
+                      {errors.name && (
+                        <p style={styles.errorText}>{errors.name}</p>
+                      )}
+                    </div>
+                  ) : (
+                    <div style={styles.displayValue}>
+                      {profile.name || (
+                        <span style={styles.placeholderText}>Belum diisi</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Email Field */}
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>
+                    <Mail size={18} style={{ marginRight: '10px' }} />
+                    Alamat Email
+                  </label>
+                  <div style={styles.displayValue}>
+                    {profile.email}
+                  </div>
+                  <p style={styles.readonlyHint}>Email tidak dapat diubah</p>
                 </div>
               </div>
             </div>
 
-            {/* Profile Form */}
-            <div style={styles.formSection}>
-              {/* Name Field */}
-              <div style={styles.formGroup}>
-                <div style={styles.formLabelRow}>
-                  <label style={styles.formLabel}>
-                    <User size={18} style={{ marginRight: '10px' }} />
-                    Nama Lengkap
-                  </label>
+            {/* Security Section */}
+            <div style={styles.securityCard}>
+              <div style={styles.cardHeader}>
+                <div style={styles.cardIcon}>
+                  <Shield size={24} />
+                </div>
+                <h2 style={styles.cardTitle}>Keamanan Akun</h2>
+              </div>
+
+              <div style={styles.securitySection}>
+                <div style={styles.securityHeader}>
+                  <h3 style={styles.securityTitle}>
+                    <Key size={18} style={{ marginRight: '10px' }} />
+                    Ubah Password
+                  </h3>
                   <button
-                    onClick={() => setEditing(!editing)}
-                    style={styles.editToggle}
+                    onClick={() => setShowChangePassword(!showChangePassword)}
+                    style={styles.securityToggle}
                     className="toggle-btn"
                   >
-                    {editing ? (
+                    {showChangePassword ? (
                       <>
                         <X size={16} style={{ marginRight: '6px' }} />
-                        Batal
+                        Sembunyikan
                       </>
                     ) : (
                       <>
-                        <Edit size={16} style={{ marginRight: '6px' }} />
-                        Edit
+                        <Lock size={16} style={{ marginRight: '6px' }} />
+                        Ubah Password
                       </>
                     )}
                   </button>
                 </div>
-                
-                {editing ? (
-                  <div>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      style={{
-                        ...styles.inputField,
-                        borderColor: errors.name ? '#ef4444' : '#e5e7eb'
-                      }}
-                      className="input-field"
-                      placeholder="Masukkan nama lengkap"
-                    />
-                    {errors.name && (
-                      <p style={styles.errorText}>{errors.name}</p>
-                    )}
+
+                {showChangePassword && (
+                  <div style={styles.passwordForm}>
+                    <div style={styles.passwordFields}>
+                      <div style={styles.passwordGroup}>
+                        <label style={styles.passwordLabel}>
+                          Password Saat Ini
+                          <span style={styles.required}>*</span>
+                        </label>
+                        <input
+                          type="password"
+                          value={currentPassword}
+                          onChange={(e) => setCurrentPassword(e.target.value)}
+                          style={{
+                            ...styles.passwordInput,
+                            borderColor: errors.currentPassword ? '#ef4444' : '#e5e7eb'
+                          }}
+                          className="input-field"
+                          placeholder="Masukkan password saat ini"
+                        />
+                        {errors.currentPassword && (
+                          <p style={styles.errorText}>{errors.currentPassword}</p>
+                        )}
+                      </div>
+
+                      <div style={styles.passwordGroup}>
+                        <label style={styles.passwordLabel}>
+                          Password Baru
+                          <span style={styles.required}>*</span>
+                        </label>
+                        <input
+                          type="password"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          style={{
+                            ...styles.passwordInput,
+                            borderColor: errors.newPassword ? '#ef4444' : '#e5e7eb'
+                          }}
+                          className="input-field"
+                          placeholder="Minimal 8 karakter dengan huruf besar dan angka"
+                        />
+                        {errors.newPassword && (
+                          <p style={styles.errorText}>{errors.newPassword}</p>
+                        )}
+                        <div style={styles.passwordRules}>
+                          <span style={styles.rule}>• Minimal 8 karakter</span>
+                          <span style={styles.rule}>• Mengandung huruf besar</span>
+                          <span style={styles.rule}>• Mengandung angka</span>
+                        </div>
+                      </div>
+
+                      <div style={styles.passwordGroup}>
+                        <label style={styles.passwordLabel}>
+                          Konfirmasi Password Baru
+                          <span style={styles.required}>*</span>
+                        </label>
+                        <input
+                          type="password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          style={{
+                            ...styles.passwordInput,
+                            borderColor: errors.confirmPassword ? '#ef4444' : '#e5e7eb'
+                          }}
+                          className="input-field"
+                          placeholder="Masukkan kembali password baru"
+                        />
+                        {errors.confirmPassword && (
+                          <p style={styles.errorText}>{errors.confirmPassword}</p>
+                        )}
+                      </div>
+                    </div>
                   </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Action Buttons */}
+          <div style={styles.sideColumn}>
+            <div style={styles.actionCard}>
+              <h3 style={styles.actionTitle}>Aksi</h3>
+              
+              <div style={styles.actionButtons}>
+                {(editing || showChangePassword) ? (
+                  <>
+                    <button
+                      onClick={saveProfile}
+                      disabled={saving}
+                      style={saving ? styles.saveButtonDisabled : styles.saveButton}
+                      className="action-btn"
+                    >
+                      {saving ? (
+                        <>
+                          <div style={styles.savingSpinner}></div>
+                          <span style={{ marginLeft: '12px' }}>Menyimpan...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Save size={20} style={{ marginRight: '10px' }} />
+                          Simpan Perubahan
+                        </>
+                      )}
+                    </button>
+                    
+                    <button
+                      onClick={cancelChanges}
+                      style={styles.cancelButton}
+                      className="action-btn"
+                    >
+                      <X size={20} style={{ marginRight: '10px' }} />
+                      Batalkan Semua
+                    </button>
+                  </>
                 ) : (
-                  <div style={styles.displayValue}>
-                    {profile.name || (
-                      <span style={styles.placeholderText}>Belum diisi</span>
-                    )}
+                  <div style={styles.noChanges}>
+                    <p style={styles.noChangesText}>Tidak ada perubahan</p>
+                    <p style={styles.noChangesHint}>
+                      Edit profil atau ubah password untuk membuat perubahan
+                    </p>
                   </div>
                 )}
               </div>
 
-              {/* Email Field */}
-              <div style={styles.formGroup}>
-                <label style={styles.formLabel}>
-                  <Mail size={18} style={{ marginRight: '10px' }} />
-                  Alamat Email
-                </label>
-                <div style={styles.displayValue}>
-                  {profile.email}
-                </div>
-                <p style={styles.readonlyHint}>Email tidak dapat diubah</p>
+              <div style={styles.securityTips}>
+                <h4 style={styles.tipsTitle}>Tips Keamanan</h4>
+                <ul style={styles.tipsList}>
+                  <li style={styles.tipItem}>• Gunakan password yang unik</li>
+                  <li style={styles.tipItem}>• Jangan bagikan password Anda</li>
+                  <li style={styles.tipItem}>• Perbarui password secara berkala</li>
+                  <li style={styles.tipItem}>• Gunakan 2FA jika tersedia</li>
+                </ul>
               </div>
-            </div>
-          </div>
-
-          {/* Security Section */}
-          <div style={styles.securityCard}>
-            <div style={styles.cardHeader}>
-              <div style={styles.cardIcon}>
-                <Shield size={24} />
-              </div>
-              <h2 style={styles.cardTitle}>Keamanan Akun</h2>
-            </div>
-
-            <div style={styles.securitySection}>
-              <div style={styles.securityHeader}>
-                <h3 style={styles.securityTitle}>
-                  <Key size={18} style={{ marginRight: '10px' }} />
-                  Ubah Password
-                </h3>
-                <button
-                  onClick={() => setShowChangePassword(!showChangePassword)}
-                  style={styles.securityToggle}
-                  className="toggle-btn"
-                >
-                  {showChangePassword ? (
-                    <>
-                      <X size={16} style={{ marginRight: '6px' }} />
-                      Sembunyikan
-                    </>
-                  ) : (
-                    <>
-                      <Lock size={16} style={{ marginRight: '6px' }} />
-                      Ubah Password
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {showChangePassword && (
-                <div style={styles.passwordForm}>
-                  <div style={styles.passwordFields}>
-                    <div style={styles.passwordGroup}>
-                      <label style={styles.passwordLabel}>
-                        Password Saat Ini
-                        <span style={styles.required}>*</span>
-                      </label>
-                      <input
-                        type="password"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
-                        style={{
-                          ...styles.passwordInput,
-                          borderColor: errors.currentPassword ? '#ef4444' : '#e5e7eb'
-                        }}
-                        className="input-field"
-                        placeholder="Masukkan password saat ini"
-                      />
-                      {errors.currentPassword && (
-                        <p style={styles.errorText}>{errors.currentPassword}</p>
-                      )}
-                    </div>
-
-                    <div style={styles.passwordGroup}>
-                      <label style={styles.passwordLabel}>
-                        Password Baru
-                        <span style={styles.required}>*</span>
-                      </label>
-                      <input
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        style={{
-                          ...styles.passwordInput,
-                          borderColor: errors.newPassword ? '#ef4444' : '#e5e7eb'
-                        }}
-                        className="input-field"
-                        placeholder="Minimal 8 karakter dengan huruf besar dan angka"
-                      />
-                      {errors.newPassword && (
-                        <p style={styles.errorText}>{errors.newPassword}</p>
-                      )}
-                      <div style={styles.passwordRules}>
-                        <span style={styles.rule}>• Minimal 8 karakter</span>
-                        <span style={styles.rule}>• Mengandung huruf besar</span>
-                        <span style={styles.rule}>• Mengandung angka</span>
-                      </div>
-                    </div>
-
-                    <div style={styles.passwordGroup}>
-                      <label style={styles.passwordLabel}>
-                        Konfirmasi Password Baru
-                        <span style={styles.required}>*</span>
-                      </label>
-                      <input
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        style={{
-                          ...styles.passwordInput,
-                          borderColor: errors.confirmPassword ? '#ef4444' : '#e5e7eb'
-                        }}
-                        className="input-field"
-                        placeholder="Masukkan kembali password baru"
-                      />
-                      {errors.confirmPassword && (
-                        <p style={styles.errorText}>{errors.confirmPassword}</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column - Action Buttons */}
-        <div style={styles.sideColumn}>
-          <div style={styles.actionCard}>
-            <h3 style={styles.actionTitle}>Aksi</h3>
-            
-            <div style={styles.actionButtons}>
-              {(editing || showChangePassword) ? (
-                <>
-                  <button
-                    onClick={saveProfile}
-                    disabled={saving}
-                    style={saving ? styles.saveButtonDisabled : styles.saveButton}
-                    className="action-btn"
-                  >
-                    {saving ? (
-                      <>
-                        <div style={styles.savingSpinner}></div>
-                        <span style={{ marginLeft: '12px' }}>Menyimpan...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Save size={20} style={{ marginRight: '10px' }} />
-                        Simpan Perubahan
-                      </>
-                    )}
-                  </button>
-                  
-                  <button
-                    onClick={cancelChanges}
-                    style={styles.cancelButton}
-                    className="action-btn"
-                  >
-                    <X size={20} style={{ marginRight: '10px' }} />
-                    Batalkan Semua
-                  </button>
-                </>
-              ) : (
-                <div style={styles.noChanges}>
-                  <p style={styles.noChangesText}>Tidak ada perubahan</p>
-                  <p style={styles.noChangesHint}>
-                    Edit profil atau ubah password untuk membuat perubahan
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <div style={styles.securityTips}>
-              <h4 style={styles.tipsTitle}>Tips Keamanan</h4>
-              <ul style={styles.tipsList}>
-                <li style={styles.tipItem}>• Gunakan password yang unik</li>
-                <li style={styles.tipItem}>• Jangan bagikan password Anda</li>
-                <li style={styles.tipItem}>• Perbarui password secara berkala</li>
-                <li style={styles.tipItem}>• Gunakan 2FA jika tersedia</li>
-              </ul>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Footer Minimal */}
+      <footer style={{
+        background: '#f8f9fa',
+        padding: '40px 20px 20px',
+        textAlign: 'center',
+        borderTop: '1px solid #e5e7eb'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '30px',
+          marginBottom: '30px'
+        }}>
+          <a 
+            href="mailto:earlytadwi7@gmail.com"
+            style={{
+              color: '#4b5563',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textDecoration: 'none',
+              transition: 'color 0.2s'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#800000'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#4b5563'}
+          >
+            <Mail size={20} />
+            <span style={{ fontSize: '12px', marginTop: '5px' }}>Email</span>
+          </a>
+          
+          <a 
+            href="https://wa.me/6281547184307" 
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: '#4b5563',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textDecoration: 'none',
+              transition: 'color 0.2s'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#800000'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#4b5563'}
+          >
+            <Phone size={20} />
+            <span style={{ fontSize: '12px', marginTop: '5px' }}>WhatsApp</span>
+          </a>
+          
+          <a 
+            href="https://instagram.com/eddlyaa__" 
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: '#4b5563',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textDecoration: 'none',
+              transition: 'color 0.2s'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#800000'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#4b5563'}
+          >
+            <Instagram size={20} />
+            <span style={{ fontSize: '12px', marginTop: '5px' }}>Instagram</span>
+          </a>
+        </div>
+        
+        <div style={{
+          color: '#6b7280',
+          fontSize: '14px',
+          borderTop: '1px solid #e5e7eb',
+          paddingTop: '20px'
+        }}>
+          © 2026 E-commerce Lyta
+        </div>
+      </footer>
+    </>
   );
 }
 
